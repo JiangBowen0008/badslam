@@ -6,6 +6,8 @@ if (CMAKE_CUDA_COMPILER)
   find_package(SuiteSparse REQUIRED)
   find_package(DLib REQUIRED)
   find_package(Eigen3 REQUIRED)
+  # add_definitions(${EIGEN3_DEFINITIONS})
+  # include_directories(${EIGEN3_INCLUDE_DIR})
   find_package(g2o REQUIRED)
   find_package(OpenGL REQUIRED)
   # Cross-platform threading. See:

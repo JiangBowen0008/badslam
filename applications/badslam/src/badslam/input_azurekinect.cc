@@ -413,7 +413,7 @@ bool K4AInputThread::decode_image_opencv(
   uchar* buf = k4a_image_get_buffer(color_image);
   cv::Mat rawData(1, nSize, CV_8UC1, (void*)buf);
   
-  decodedImage = cv::imdecode(rawData, CV_LOAD_IMAGE_UNCHANGED);
+  decodedImage = cv::imdecode(rawData, cv::IMREAD_UNCHANGED);
   if (decodedImage.data == NULL) {
     // Error reading raw image data
     LOG(ERROR) << "Error decoding image\n";
@@ -493,13 +493,13 @@ bool K4AInputThread::undistort_depth_and_rgb(
       cv_depth,
       cv_depth_downscaled,
       cv_depth_downscaled.size(),
-      CV_INTER_AREA);
+      cv::INTER_AREA);
   //cv::imshow("cv depth downscale ", cv_depth_downscaled);
   
   cv::resize(cv_color,
       cv_color_downscaled,
       cv_color_downscaled.size(),
-      CV_INTER_AREA);
+      cv::INTER_AREA);
   //cv::imshow("cv color downscale ", cv_color_downscaled);
   
   remap(cv_depth_downscaled, undistorted_depth, map1, map2, cv::INTER_LINEAR, cv::BORDER_CONSTANT);
@@ -615,11 +615,11 @@ void K4AInputThread::ThreadMain() {
 		  } else if (color_format == K4A_IMAGE_FORMAT_COLOR_YUY2) {
 			  uchar* buf = k4a_image_get_buffer(k4a_rgb_image);
 			  cv::Mat rawData(height, width, CV_8UC2, (void*)buf);
-			  cv::cvtColor(rawData, cv_uncompressed_color_image, CV_YUV2BGR_YUY2, 0);
+			  cv::cvtColor(rawData, cv_uncompressed_color_image, cv::COLOR_YUV2BGR_YUY2, 0);
 		  } else if (color_format == K4A_IMAGE_FORMAT_COLOR_NV12) {
 			  uchar* buf = k4a_image_get_buffer(k4a_rgb_image);
 			  cv::Mat rawData(height * 1.5, width, CV_8UC1, (void*)buf);
-			  cv::cvtColor(rawData, cv_uncompressed_color_image, CV_YUV2RGB_NV21, 0);
+			  cv::cvtColor(rawData, cv_uncompressed_color_image, cv::COLOR_YUV2RGB_NV21, 0);
 		  } else {
 		    LOG(FATAL) << "Color format not supported: " << color_format;
 		  }
@@ -645,7 +645,7 @@ void K4AInputThread::ThreadMain() {
           cv_transformed_depth_image,
           cv_undistorted_color,
           cv_undistorted_depth);
-      cv::cvtColor(cv_undistorted_color, cv_undistorted_color, CV_BGRA2RGB);
+      cv::cvtColor(cv_undistorted_color, cv_undistorted_color, cv::COLOR_BGRA2RGB);
 	  } else {  // if (use_ir) {
 		  remap(cv_depth, cv_undistorted_depth, map1, map2, cv::INTER_LINEAR, cv::BORDER_CONSTANT);
   
@@ -672,7 +672,7 @@ void K4AInputThread::ThreadMain() {
 		  cv::Mat cv_ir_image_8;
 		  cv_ir_image.convertTo(cv_ir_image_8, CV_8U, 1.f / 4.f);
 		  remap(cv_ir_image_8, cv_undistorted_ir, map1, map2, cv::INTER_LINEAR, cv::BORDER_CONSTANT);
-		  cv::cvtColor(cv_undistorted_ir, cv_undistorted_color, CV_GRAY2RGB);
+		  cv::cvtColor(cv_undistorted_ir, cv_undistorted_color, cv::COLOR_GRAY2RGB);
 	  }
     
     // Add the frame to the queue

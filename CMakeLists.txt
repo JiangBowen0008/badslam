@@ -69,7 +69,9 @@ find_package(Threads REQUIRED)
 find_package(OpenGL REQUIRED)
 
 # Eigen (external)
-find_package(Eigen3 REQUIRED)
+find_package(Eigen3 3.3 REQUIRED NO_MODULE)
+add_definitions(${EIGEN3_DEFINITIONS})
+include_directories(${EIGEN3_INCLUDE_DIRS})
 
 # Boost (external)
 if (POLICY CMP0074) # get rid of annoying warning
@@ -156,7 +158,15 @@ if (TARGET Qt5::Core AND UNIX)
 endif()
 
 # OpenCV (external, required)
-find_package(OpenCV 3.1.0 REQUIRED)
+# Custom path
+# if(DEFINED ENV{OPENCV_INSTALL_DIR})
+#     find_package(OpenCV 3.1.0 REQUIRED PATHS $ENV{OPENCV_INSTALL_DIR})
+# else()
+#     message("OPENCV_INSTALL_DIR not set, searching in default location(s)")
+#     find_package(OpenCV 3.1.0 REQUIRED)
+# endif(DEFINED ENV{OPENCV_INSTALL_DIR})
+find_package(OpenCV REQUIRED)
+# find_package(OpenCV 3.1.0 REQUIRED)
 
 # Settings.
 if(CMAKE_COMPILER_IS_GNUCC OR CMAKE_COMPILER_IS_GNUXX)
@@ -398,6 +408,7 @@ target_link_libraries(libvis
     ${Qt5Widgets_LIBRARIES}
     ${Qt5Opengl_LIBRARIES}
     ${Qt5Core_LIBRARIES}
+    Eigen3::Eigen
   PRIVATE
     ${Boost_LIBRARIES}
     ${GLEW_LIBRARIES}
@@ -406,6 +417,7 @@ target_link_libraries(libvis
     png  #_static
     #z
     Threads::Threads
+    Eigen3::Eigen
 )
 if(VULKAN_FOUND)
   target_link_libraries(libvis PRIVATE
