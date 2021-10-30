@@ -1,5 +1,10 @@
 # BAD SLAM #
 
+Changes from the original fork:
+ - Fix CMake Eigen linking issue
+ - Add compatibility to OpenCV4
+ - Lower GPU RAM Requirement for mobile platforms (working on)
+
 ## Overview ##
 
 BAD SLAM is a real-time approach for Simultaneous Localization and Mapping (SLAM) for RGB-D cameras.
